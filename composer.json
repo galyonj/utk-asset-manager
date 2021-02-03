@@ -1,0 +1,39 @@
+{
+	"name": "galyonj/shrike",
+	"type": "wordpress-plugin",
+	"authors": [
+		{
+			"name": "John Galyon",
+			"email": "galyon.jb@gmail.com"
+		}
+	],
+	"repositories": [
+		{
+			"type": "composer",
+			"url": "https://wpackagist.org",
+			"only": [
+				"wpackagist-plugin/*",
+				"wpackagist-theme/*"
+			]
+		}
+	],
+	"extra": {
+		"installer-paths": {
+			"plugins/{$name}/": [
+				"type:wordpress-plugin"
+			],
+			"themes/${$name}/": [
+				"type:wordpress-theme"
+			]
+		}
+	},
+	"require": {
+		"wpackagist-plugin/custom-post-type-ui": "^1.8",
+		"wpackagist-plugin/debug-bar": "^1.1",
+		"wpackagist-plugin/debug-bar-shortcodes": "^2.0",
+		"wpackagist-plugin/debug-bar-constants": "^2.0",
+		"wpackagist-plugin/debug-bar-actions-and-filters-addon": "^1.5",
+		"wpackagist-plugin/debug-bar-list-dependencies": "^1.1",
+		"wpackagist-plugin/elementor": "^3.1"
+	}
+}

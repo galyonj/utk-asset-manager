@@ -1,0 +1,13 @@
+
+.row {
+	display:         flex;
+	flex-flow:       row nowrap;
+	align-items:     stretch;
+	justify-content: space-between;
+	width:           100%;
+
+	.col {
+		display:   flex;
+		flex-flow: column;
+	}
+}
