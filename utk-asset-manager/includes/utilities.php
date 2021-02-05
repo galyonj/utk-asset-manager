@@ -12,8 +12,8 @@
  * Get the icon for use in the WordPress admin menu
  *
  * @since  0.0.1
- * @author John Galyon
  * @return string base64 encoded SVG data string
+ * @author John Galyon
  */
 function am_get_menu_icon() {
 
@@ -23,4 +23,45 @@ function am_get_menu_icon() {
 	// Return that data as a base64 encoded string
 	return 'data:image/svg+xml;base64,' . base64_encode( $icon );
 
+}
+
+/**
+ * Given a supplied $val, returns a boolean.
+ *
+ * @since 0.0.1
+ *
+ * @param mixed $val value to be coerced
+ *
+ * @return bool result of filter_var on $val
+ */
+function coerce_bool( $val ): bool {
+	return filter_var( $val, FILTER_VALIDATE_BOOLEAN );
+}
+
+function get_svg_codes() {
+	$base_dir = dirname( plugin_dir_path( __FILE__ ) ) . '/assets/svgs';
+	$dirs     = array_diff( scandir( $base_dir ), [ '.', '..' ] );
+	$svgs     = [];
+	$search   = [
+		'<svg',
+		'<path'
+	];
+	$replace  = [
+		'<svg width="20" height="20"',
+		'<path fill="black"'
+	];
+
+	foreach ( $dirs as $dir ) {
+		$files  = array_diff( scandir( "{$base_dir}/{$dir}/" ), [ '.', '..' ] );
+		$svgs[] = [ $dir ];
+
+		foreach ( $files as $file ) {
+			$svg_file = pathinfo( "{$base_dir}/{$dir}/{$file}" );
+			$contents = str_replace( $search, $replace, file_get_contents( "{$base_dir}/{$dir}/{$file}" ) );
+
+			$svgs[ $dir ][ $svg_file['filename'] ] = $contents;
+		}
+	}
+
+	return $svgs;
 }

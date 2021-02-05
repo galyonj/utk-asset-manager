@@ -13,12 +13,17 @@ function am_display_manage_assets() {
 	?>
 	<div class="wrap">
 		<h1><?php echo get_admin_page_title(); ?></h1>
-		<p>
-			<?php print_r( $hook_suffix ); ?>
-		</p>
-		<p>
-			<?php print_r( dirname( plugin_dir_path( __FILE__ ) ) ); ?>
-		</p>
+		<hr>
+		<div class="row">
+			<div class="col-sm-4">
+				<form method="post" action="<?php esc_url( admin_url( 'admin-post.php' ) ); ?>" id="utk-am-form">
+
+				</form>
+			</div>
+			<div class="col-sm-8">
+
+			</div>
+		</div>
 	</div>
 	<?php
 }

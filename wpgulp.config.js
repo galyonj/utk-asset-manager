@@ -46,7 +46,7 @@ const jsVendorFile = `${pkg.name}-lib`;
 // JS Custom options.
 
 // Path to JS custom scripts folder.
-const jsCustomSRC = './_dev/js/custom/*.js';
+const jsCustomSRC = './_dev/js/*.js';
 
 // Path to place the compiled JS custom scripts file.
 const jsCustomDestination = `./${pkg.name}/assets/js/`;
@@ -72,7 +72,7 @@ const watchStyles = './_dev/css/**/*.scss';
 const watchJsVendor = './_dev/js/vendor/*.js';
 
 // Path to all custom JS files.
-const watchJsCustom = './_dev/js/custom/*.js';
+const watchJsCustom = './_dev/js/*.js';
 
 // Path to all PHP files.
 const watchPhp = `./${pkg.name}/**/*.php`;
