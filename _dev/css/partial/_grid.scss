@@ -8,8 +8,6 @@
 		// 100% wide container at all breakpoints
 	.container-fluid {
 		@include make-container();
-
-		margin: 19px 20px 0 2px;
 	}
 
 	// Responsive containers that are 100% wide until a breakpoint
@@ -72,4 +70,9 @@
 
 @if $enable-grid-classes {
 	@include make-grid-columns();
+}
+
+// asset manager page wrap
+.asset-manager-wrapper {
+	margin: 19px 20px 0 2px;
 }

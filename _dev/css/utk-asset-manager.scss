@@ -14,10 +14,10 @@
 @import '../../node_modules/bootstrap/scss/mixins';
 @import '../../node_modules/bootstrap/scss/root';
 @import 'partial/reboot';
-@import '../../node_modules/bootstrap/scss/type';
+@import 'partial/type';
 @import '../../node_modules/bootstrap/scss/images';
 @import '../../node_modules/bootstrap/scss/code';
-@import '../../node_modules/bootstrap/scss/grid';
+@import 'partial/grid';
 @import '../../node_modules/bootstrap/scss/tables';
 @import 'partial/forms';
 @import '../../node_modules/bootstrap/scss/buttons';

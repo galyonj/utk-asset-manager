@@ -35,11 +35,26 @@ define( 'AM_VERSION', $file_data['version'] );
 define( 'AM_TEXT', $file_data['text'] );
 
 /**
+ * Glob through the classes directory
+ * and require each file therein.
+ *
+ * @since 0.0.1
+ */
+function am_load_classes() {
+	$classes = glob( plugin_dir_path( __FILE__ ) . '/classes/*.php' );
+
+	foreach ( $classes as $class ) {
+		require_once( $class );
+	}
+}
+
+add_action( 'plugins_loaded', 'am_load_classes' );
+
+/**
  * Glob through the includes directory
  * and require each file therein.
  *
  * @since  0.0.1
- * @author John Galyon
  */
 function am_required_files() {
 	$files = glob( plugin_dir_path( __FILE__ ) . '/includes/*.php' );
@@ -48,17 +63,18 @@ function am_required_files() {
 		require_once( $file );
 	}
 }
+
 add_action( 'plugins_loaded', 'am_required_files' );
 
 /**
  * Load the plugin textdomain and show the path to the languages directory
  *
  * @since  0.0.1
- * @author John Galyon
  */
 function am_load_textdomain() {
 	load_plugin_textdomain( AM_TEXT, false, plugin_dir_path( __FILE__ ) . '/languages' );
 }
+
 add_action( 'plugins_loaded', 'am_load_textdomain' );
 
 function am_create_plugin_menu() {
@@ -103,4 +119,5 @@ function am_create_plugin_menu() {
 		'am_display_settings'
 	);
 }
+
 add_action( 'admin_menu', 'am_create_plugin_menu' );

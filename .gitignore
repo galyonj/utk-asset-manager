@@ -4,7 +4,8 @@
 node_modules/
 /node_modules/
 
-# Ignore all directories created by docker
+# Ignore all directories created by docker #
+############################################
 db/
 /db/
 plugins/
@@ -47,13 +48,13 @@ Thumbs.db
 *.un~
 
 # SASS #
-##########
+########
 **/.sass-cache
 **/.sass-cache/*
 **/.map
 
 # Composer #
-##########
+############
 !assets/js/vendor/
 wpcs/
 /vendor/
@@ -61,21 +62,22 @@ composer.lock
 package-lock.json
 
 # Bower #
-##########
+#########
 assets/bower_components/*
 
 # Codekit #
-##########
+###########
 /codekit-config.json
 *.codekit
 **.codekit-cache/*
 
 # Compiled Files and Build Dirs #
-##########
+#################################
 /README.html
 **/.zip
 
 # PhpStorm Project Files #
+##########################
 .idea/
 library/vendors/composer
 assets/img/.DS_Store

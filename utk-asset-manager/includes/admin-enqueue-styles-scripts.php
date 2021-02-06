@@ -24,18 +24,19 @@ function am_admin_enqueue() {
 
 		wp_enqueue_style(
 			AM_TEXT,
-			dirname( plugin_dir_path( __FILE__ ) ) . '/assets/css/' . AM_TEXT . '.min.css',
+			dirname( plugin_dir_url( __FILE__ ) ) . '/assets/css/' . AM_TEXT . '.min.css',
 			'',
 			AM_VERSION,
 		);
 
 		wp_enqueue_script(
 			AM_TEXT,
-			dirname( plugin_dir_path( __FILE__ ) ) . '/assets/css/' . AM_TEXT . '.min.js',
+			dirname( plugin_dir_url( __FILE__ ) ) . '/assets/css/' . AM_TEXT . '.min.js',
 			[ 'jquery' ],
 			AM_VERSION,
 			true
 		);
 	}
 }
+
 add_action( 'admin_enqueue_scripts', 'am_admin_enqueue' );

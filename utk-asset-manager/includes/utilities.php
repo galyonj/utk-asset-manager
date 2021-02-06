@@ -1,6 +1,7 @@
 <?php
 /**
  * Plugin utilities
+ *
  * @since      0.0.1
  * @author     John Galyon
  * @package    UTK_ASSET_MANAGER
@@ -35,33 +36,74 @@ function am_get_menu_icon() {
  * @return bool result of filter_var on $val
  */
 function coerce_bool( $val ): bool {
-	return filter_var( $val, FILTER_VALIDATE_BOOLEAN );
+	return filter_var( $val, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE );
 }
 
-function get_svg_codes() {
+/**
+ * Cheater function to make it easy to hide
+ * certain blocks of debugging code in production.
+ *
+ * @since 0.0.1
+ *
+ * @return bool
+ */
+function is_dev(): bool {
+	$host = $_SERVER['HTTP_HOST'];
+
+	if ( 'localhost:8080' !== $host ) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * In the interest of making it easy for the user to choose a menu
+ * icon for their new custom post type, this function loops through
+ * the children of {project}/assets/svgs and returns a key=>value
+ * array of svg names and base64-encoded svg strings
+ *
+ * This will do two things:
+ * 1. Populate the modal dialog fired when the user interacts with the
+ *    choose_menu_icon field
+ * 2. Return the name of the chosen icon to the field
+ * 3. Given the name of the chosen icon, use the icon name to populate the
+ *    menu icon in register_post_type($args).
+ *
+ * @since 0.0.1
+ *
+ * @param null $icon selected icon name.
+ *
+ * @return mixed
+ */
+function get_svg_codes( $icon = null ) {
+
 	$base_dir = dirname( plugin_dir_path( __FILE__ ) ) . '/assets/svgs';
 	$dirs     = array_diff( scandir( $base_dir ), [ '.', '..' ] );
-	$svgs     = [];
+	$svg_arr  = [];
 	$search   = [
-		'<svg',
-		'<path'
+		'<path',
 	];
 	$replace  = [
-		'<svg width="20" height="20"',
-		'<path fill="black"'
+		'<path fill="black"',
 	];
 
 	foreach ( $dirs as $dir ) {
-		$files  = array_diff( scandir( "{$base_dir}/{$dir}/" ), [ '.', '..' ] );
-		$svgs[] = [ $dir ];
+		$files = array_diff( scandir( "{$base_dir}/{$dir}/" ), [ '.', '..' ] );
 
 		foreach ( $files as $file ) {
 			$svg_file = pathinfo( "{$base_dir}/{$dir}/{$file}" );
 			$contents = str_replace( $search, $replace, file_get_contents( "{$base_dir}/{$dir}/{$file}" ) );
 
-			$svgs[ $dir ][ $svg_file['filename'] ] = $contents;
+			$svg_arr[ $dir . '_' . $svg_file['filename'] ] = $contents;
 		}
+
 	}
 
-	return $svgs;
+	if ( is_null( $icon ) ) {
+		return $svg_arr;
+	} else {
+		return $svg_arr[ $icon ];
+	}
+
 }

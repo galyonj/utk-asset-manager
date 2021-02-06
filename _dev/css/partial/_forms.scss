@@ -16,7 +16,7 @@
 	color:            $input-color;
 	background-color: $input-bg;
 	background-clip:  padding-box;
-	border:           $input-border-width solid $input-border-color;
+	border:           $input-border-width solid $input-border-color !important;
 
 	// Note: This has no effect on <select>s in some browsers, due to the limited stylability of `<select>`s in CSS.
 	@include border-radius($input-border-radius, 0);
@@ -101,6 +101,10 @@ select.form-control {
 	@include font-size(inherit); // Override the `<legend>` default
 	line-height:    $input-line-height;
 	font-weight:    $font-weight-bold;
+
+	span.required {
+		color: $danger;
+	}
 }
 
 .col-form-label-lg {
@@ -353,7 +357,10 @@ textarea.form-control {
 #utk-am-form {
 	.form-section {
 		background-color: $white;
-		border:           $card-border-width solid $card-border-color;
+		border:           1px solid $card-border-color;
+		display:          flex;
+		flex-direction:   column;
+		width:            100%;
 
 		.form-section-header {
 			padding:       8px 15px;
@@ -368,5 +375,13 @@ textarea.form-control {
 		.form-section-body {
 			padding: 15px 15px 0;
 		}
+
+		.form-section-footer {
+			padding: 8px 15px 15px;
+		}
+	}
+
+	select {
+		border: $input-border-width solid $input-border-color !important;
 	}
 }
