@@ -228,9 +228,9 @@ textarea.form-control {
 }
 
 .form-check-input {
-	position:    absolute;
-	margin-top:  $form-check-input-margin-y;
-	margin-left: -$form-check-input-gutter;
+	position:    absolute !important;
+	margin-top:  $form-check-input-margin-y !important;
+	margin-left: -$form-check-input-gutter !important;
 
 	// Use [disabled] and :disabled for workaround https://github.com/twbs/bootstrap/issues/28247
 	&[disabled] ~ .form-check-label,
@@ -387,5 +387,10 @@ textarea.form-control {
 
 	.input-group-button {
 		border-radius: 0 $border-radius $border-radius 0 !important;
+	}
+
+	.checkbox-span {
+		@extend label;
+		@extend .col-form-label;
 	}
 }

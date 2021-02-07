@@ -94,6 +94,55 @@ function am_display_manage_assets() {
 									] );
 									?>
 									<?php
+									$select['options'] = [
+										[
+											'default' => true,
+											'text'    => esc_attr__( 'No', AM_TEXT ),
+											'value'   => 'false'
+										],
+										[
+											'text'  => esc_attr__( 'Yes', AM_TEXT ),
+											'value' => 'true'
+										]
+									];
+
+									$selected           = isset( $current ) ? coerce_bool( $current['exclude_from_search'] ) : '';
+									$select['selected'] = ( ! empty( $selected ) ) ? $current['exclude_from_search'] : '';
+
+									echo $ui->make_select_field( [
+										'classes'    => false,
+										'desc'       => esc_attr__( 'Should assets of this type ever be hidden in search results?', AM_TEXT ),
+										'label_text' => esc_attr__( 'Hide in Search', AM_TEXT ),
+										'name'       => 'exclude_from_search',
+										'selections' => $select,
+									] );
+									?>
+									<?php
+									$select['options'] = [
+										[
+											'text'  => esc_attr__( 'No', AM_TEXT ),
+											'value' => 'false'
+										],
+										[
+											'default' => true,
+											'text'    => esc_attr__( 'Yes', AM_TEXT ),
+											'value'   => 'true'
+										]
+									];
+
+									$selected           = isset( $current ) ? coerce_bool( $current['set_expiration'] ) : '';
+									$select['selected'] = ( ! empty( $selected ) ) ? $current['set_expiration'] : '';
+
+									echo $ui->make_select_field( [
+										'classes'    => false,
+										'desc'       => esc_attr__( 'Should assets of this type automatically expire? You will be able to set an expiration period for each asset.',
+											AM_TEXT ),
+										'label_text' => esc_attr__( 'Expiration', AM_TEXT ),
+										'name'       => 'set_expiration',
+										'selections' => $select,
+									] );
+									?>
+									<?php
 									echo $ui->make_textarea_field( [
 										'desc'       => esc_attr__( '(Optional) Enter a short description of your asset type', AM_TEXT ),
 										'label_text' => esc_attr__( 'Description', AM_TEXT ),
@@ -114,13 +163,7 @@ function am_display_manage_assets() {
             <div class="col-sm-8">
 				<?php if ( is_dev() ) : ?>
                     <pre>
-                        <?php $icon = 'dashicons_edit';
-                        echo 'result of returning a single icon:<br>';
-                        print_r( get_svg_codes( $icon ) );
-                        echo '<br><hr><br>';
-                        echo 'result of not entering an argument: ' . count( get_svg_codes() ) . ' icons returned.<br>';
-                        print_r( get_svg_codes() );
-                        ?>
+
                     </pre>
 				<?php endif; ?>
             </div>

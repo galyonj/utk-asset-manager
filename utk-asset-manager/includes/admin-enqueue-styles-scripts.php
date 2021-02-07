@@ -30,9 +30,17 @@ function am_admin_enqueue() {
 		);
 
 		wp_enqueue_script(
-			AM_TEXT,
-			dirname( plugin_dir_url( __FILE__ ) ) . '/assets/css/' . AM_TEXT . '.min.js',
+			AM_TEXT . '-lib',
+			dirname( plugin_dir_url( __FILE__ ) ) . '/assets/js/' . AM_TEXT . '-lib.min.js',
 			[ 'jquery' ],
+			'',
+			true
+		);
+
+		wp_enqueue_script(
+			AM_TEXT,
+			dirname( plugin_dir_url( __FILE__ ) ) . '/assets/js/' . AM_TEXT . '.min.js',
+			[ AM_TEXT . '-lib-js' ],
 			AM_VERSION,
 			true
 		);

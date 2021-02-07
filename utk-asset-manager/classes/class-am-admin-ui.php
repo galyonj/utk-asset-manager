@@ -29,18 +29,8 @@ class AM_Admin_UI {
 	 * @since 1.0.0
 	 * @return string opening div.row.form-group
 	 */
-	public function open_row(): string {
+	public static function make_row(): string {
 		return '<div class="row form-group">';
-	}
-
-	/**
-	 * Create the closing row tag
-	 *
-	 * @since 1.0.0
-	 * @return string closing div.row
-	 */
-	public function close_div(): string {
-		return '</div></div>';
 	}
 
 	/**
@@ -52,7 +42,7 @@ class AM_Admin_UI {
 	 *
 	 * @return string
 	 */
-	public function open_col( $offset = false ): string {
+	public static function make_col( $offset = false ): string {
 
 		/**
 		 * We do not want to chance getting a null value for this,
@@ -69,6 +59,17 @@ class AM_Admin_UI {
 		$offset = ( filter_var( $offset, FILTER_VALIDATE_BOOLEAN ) ) ? ' offset-sm-3' : '';
 
 		return '<div class="col-sm-9' . $offset . '">';
+
+	}
+
+	/**
+	 * Create the closing row tag
+	 *
+	 * @since 1.0.0
+	 * @return string closing div.row
+	 */
+	public static function make_closing_divs(): string {
+		return '</div></div>';
 	}
 
 	/**
@@ -83,12 +84,14 @@ class AM_Admin_UI {
 	 *
 	 * @return string html label element
 	 */
-	public function make_label( $label_for = '', $label_text = '', $required = false ): string {
+	public static function make_label( $label_for = '', $label_text = '', $required = false ): string {
+
 		$classes = [ 'col-sm-3', 'col-form-label' ];
 		$text    = wp_strip_all_tags( $label_text );
 		$span    = ( $required ) ? '<span class="required">*</span>' : '';
 
 		return sprintf( '<label for="%s" class="%s">%s %s</label>', $label_for, implode( ' ', $classes ), $text, $span );
+
 	}
 
 	/**
@@ -101,7 +104,7 @@ class AM_Admin_UI {
 	 *
 	 * @return string html span element
 	 */
-	public function make_description( $name = '', $desc = '' ): string {
+	public static function make_description( $name = '', $desc = '' ): string {
 		return '<span class="' . $name . '-help form-text text-muted">' . $desc . '</span>';
 	}
 
@@ -114,7 +117,7 @@ class AM_Admin_UI {
 	 *
 	 * @return array
 	 */
-	public function set_default_parameters( $additions = [] ): array {
+	public static function set_default_parameters( $additions = [] ): array {
 		return array_merge( [
 			'classes'     => true,
 			'desc'        => '',
@@ -140,10 +143,10 @@ class AM_Admin_UI {
 	 *
 	 * @return string
 	 */
-	public function make_attributes( $args = [] ): string {
+	public static function make_attributes( $args = [] ): string {
 
 		// Get the default parameters that were set in this class
-		$defaults = $this->set_default_parameters();
+		$defaults = self::set_default_parameters();
 
 		/**
 		 * Merge the supplied values with our our default attributes
@@ -176,17 +179,17 @@ class AM_Admin_UI {
 	 * @return string input element
 	 */
 	public function make_text_field( $args = [] ): string {
-		$defaults = $this->set_default_parameters();
-		$atts     = $this->make_attributes( $args );
+		$defaults = self::set_default_parameters();
+		$atts     = self::make_attributes( $args );
 		$args     = wp_parse_args( $args, $defaults );
 
 		$field = '';
-		$field .= $this->open_row();
-		$field .= $this->make_label( $args['name'], $args['label_text'], $args['required'] );
-		$field .= $this->open_col( $args['offset'] );
-		$field .= "<input type=\"text\" {$atts}>";
-		$field .= $this->make_description( $args['name'], $args['desc'] );
-		$field .= $this->close_div();
+		$field .= self::make_row();
+		$field .= self::make_label( $args['name'], $args['label_text'], $args['required'] );
+		$field .= self::make_col( $args['offset'] );
+		$field .= "<input type='text' {$atts}>";
+		$field .= self::make_description( $args['name'], $args['desc'] );
+		$field .= self::make_closing_divs();
 
 		return $field;
 
@@ -202,14 +205,14 @@ class AM_Admin_UI {
 	 * @return string select element
 	 */
 	public function make_select_field( $args = [] ): string {
-		$defaults = $this->set_default_parameters();
-		$atts     = $this->make_attributes( $args );
+		$defaults = self::set_default_parameters();
+		$atts     = self::make_attributes( $args );
 		$args     = wp_parse_args( $args, $defaults );
 
 		$field = '';
-		$field .= $this->open_row();
-		$field .= $this->make_label( $args['name'], $args['label_text'], $args['required'] );
-		$field .= $this->open_col( $args['offset'] );
+		$field .= self::make_row();
+		$field .= self::make_label( $args['name'], $args['label_text'], $args['required'] );
+		$field .= self::make_col( $args['offset'] );
 		$field .= "<select {$atts}>";
 
 		if ( ! empty( $args['selections']['options'] && is_array( $args['selections']['options'] ) ) ) {
@@ -231,7 +234,7 @@ class AM_Admin_UI {
 					}
 				}
 
-				if ( ! is_numeric( $selected ) && ( ! empty( $selected ) && $selected = $option['value'] ) ) {
+				if ( ! is_numeric( $selected ) && ( ! empty( $selected ) && $selected === $option['value'] ) ) {
 					$is_selected = 'selected="selected"';
 				}
 
@@ -240,8 +243,38 @@ class AM_Admin_UI {
 		}
 
 		$field .= '</select>';
-		$field .= $this->make_description( $args['name'], $args['desc'] );
-		$field .= $this->close_div();
+		$field .= self::make_description( $args['name'], $args['desc'] );
+		$field .= self::make_closing_divs();
+
+		return $field;
+
+	}
+
+	public function make_checkboxes( $args = [] ): string {
+		$defaults = self::set_default_parameters( $args );
+		$args     = wp_parse_args( $args, $defaults );
+
+		$field = '';
+		$field .= self::make_row();
+		//$field .= self::make_label( $args['name'], $args['label_text'], $args['required'] );
+
+		$field .= "<span class='col-sm-3 checkbox-span'>{$args['label_text']}</span>";
+
+		$field .= self::make_col( $args['offset'] );
+
+		if ( ! empty( $args['checkboxes']['boxes'] ) && is_array( $args['checkboxes']['boxes'] ) ) {
+
+			foreach ( $args['checkboxes']['boxes'] as $box ) {
+
+				$field .= '<div class="form-check">';
+				$field .= "<input type='checkbox' class='form-check-input' id='{$args['name']}'>";
+				$field .= "<label for='{$args['name']}' class='mt-1 ml-2'>{$box['label']}</label>";
+				$field .= '</div>';
+
+			}
+
+		}
+		$field .= self::make_closing_divs();
 
 		return $field;
 
@@ -258,17 +291,17 @@ class AM_Admin_UI {
 	 */
 	public function make_textarea_field( $args = array() ) {
 
-		$defaults = $this->set_default_parameters();
-		$atts     = $this->make_attributes( $args );
+		$defaults = self::set_default_parameters();
+		$atts     = self::make_attributes( $args );
 		$args     = wp_parse_args( $args, $defaults );
 
 		$field = '';
-		$field .= $this->open_row();
-		$field .= $this->make_label( $args['name'], $args['label_text'], $args['required'] );
-		$field .= $this->open_col( $args['offset'] );
+		$field .= self::make_row();
+		$field .= self::make_label( $args['name'], $args['label_text'], $args['required'] );
+		$field .= self::make_col( $args['offset'] );
 		$field .= "<textarea {$atts}></textarea>";
-		$field .= $this->make_description( $args['name'], $args['desc'] );
-		$field .= $this->close_div();
+		$field .= self::make_description( $args['name'], $args['desc'] );
+		$field .= self::make_closing_divs();
 
 		return $field;
 
@@ -285,36 +318,26 @@ class AM_Admin_UI {
 	 */
 	public function make_input_group( $args = [] ): string {
 
-		$defaults = $this->set_default_parameters( [
+		$defaults = self::set_default_parameters( [
 			'btn_text' => '',
 		] );
 		$args     = wp_parse_args( $args, $defaults );
 
 		$field = '';
-		$field .= $this->open_row();
-		$field .= $this->make_label( $args['name'], $args['label_text'], $args['required'] );
-		$field .= $this->open_col( $args['offset'] );
+		$field .= self::make_row();
+		$field .= self::make_label( $args['name'], $args['label_text'], $args['required'] );
+		$field .= self::make_col( $args['offset'] );
 		$field .= '<div class="input-group">';
 		$field .= '<input type="text" class="form-control form-control-sm" id="' . $args['name'] . '" name="' . $args['name'] . '" aria-label="' . $args['label_text'] . '" aria-describedby="' . $args['name'] . '-btn">';
 		$field .= '<div class="input-group-addon">';
 		$field .= '<button type="button" class="button button-primary input-group-button" id="' . $args['name'] . '-btn">' . $args['btn_text'] . '</button>';
-		$field .= $this->close_div();
-		$field .= $this->make_description( $args['name'], $args['desc'] );
-		$field .= $this->close_div();
+		$field .= self::make_closing_divs();
+		$field .= self::make_description( $args['name'], $args['desc'] );
+		$field .= self::make_closing_divs();
 
 		return $field;
 
 	}
 
 
-	public function make_checkbox( $args = [] ): string {
-		$defaults = $this->set_default_parameters();
-		$atts     = $this->make_attributes( $args );
-		$args     = wp_parse_args( $args, $defaults );
-
-		$field = '';
-
-		return $field;
-
-	}
 }
