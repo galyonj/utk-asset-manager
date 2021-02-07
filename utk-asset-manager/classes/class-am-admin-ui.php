@@ -257,6 +257,7 @@ class AM_Admin_UI {
 	 * @return string textarea field
 	 */
 	public function make_textarea_field( $args = array() ) {
+
 		$defaults = $this->set_default_parameters();
 		$atts     = $this->make_attributes( $args );
 		$args     = wp_parse_args( $args, $defaults );
@@ -270,40 +271,50 @@ class AM_Admin_UI {
 		$field .= $this->close_div();
 
 		return $field;
+
 	}
 
-	public function make_checkbox( $args = array() ) {
-		$defaults   = $this->get_default_input_parameters(
-			array(
-				'checkvalue' => '',
-				'checked'    => false,
-			)
-		);
-		$args       = wp_parse_args( $args, $defaults );
-		$is_checked = empty( $args['checked'] ) ? ' checked' : '';
-		$val        = '';
+	/**
+	 * Output an input group combo with a textarea and a button
+	 *
+	 * @since 0.0.1
+	 *
+	 * @param array $args
+	 *
+	 * @return string
+	 */
+	public function make_input_group( $args = [] ): string {
 
-		if ( $args['wrap'] ) {
-			$val .= $this->open_row_div();
-			$val .= $this->open_col_div( $args['offset'] );
-		}
+		$defaults = $this->set_default_parameters( [
+			'btn_text' => '',
+		] );
+		$args     = wp_parse_args( $args, $defaults );
 
-		$val .= '<input type="checkbox" id="' . $args['name'] . '" name="' . $args['name'] . '" value="' . $args['checkvalue'] . '" />';
-		$val .= '<label for="' . $args['name'] . '" style="margin: 0 0 0 5px;">' . $args['label_text'] . '</label>';
+		$field = '';
+		$field .= $this->open_row();
+		$field .= $this->make_label( $args['name'], $args['label_text'], $args['required'] );
+		$field .= $this->open_col( $args['offset'] );
+		$field .= '<div class="input-group">';
+		$field .= '<input type="text" class="form-control form-control-sm" id="' . $args['name'] . '" name="' . $args['name'] . '" aria-label="' . $args['label_text'] . '" aria-describedby="' . $args['name'] . '-btn">';
+		$field .= '<div class="input-group-addon">';
+		$field .= '<button type="button" class="button button-primary input-group-button" id="' . $args['name'] . '-btn">' . $args['btn_text'] . '</button>';
+		$field .= $this->close_div();
+		$field .= $this->make_description( $args['name'], $args['desc'] );
+		$field .= $this->close_div();
 
-		if ( $args['field_desc'] ) {
-			$val .= $this->make_description( $args['name'], $args['field_desc'], $args['additional_text'] );
-		}
+		return $field;
 
-		if ( $args['wrap'] ) {
-			$val .= $this->close_div();
-			$val .= $this->close_div();
-		}
-
-		return $val;
 	}
 
-	public function make_btn( $args = array() ) {
+
+	public function make_checkbox( $args = [] ): string {
+		$defaults = $this->set_default_parameters();
+		$atts     = $this->make_attributes( $args );
+		$args     = wp_parse_args( $args, $defaults );
+
+		$field = '';
+
+		return $field;
 
 	}
 }

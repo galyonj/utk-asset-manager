@@ -384,4 +384,8 @@ textarea.form-control {
 	select {
 		border: $input-border-width solid $input-border-color !important;
 	}
+
+	.input-group-button {
+		border-radius: 0 $border-radius $border-radius 0 !important;
+	}
 }

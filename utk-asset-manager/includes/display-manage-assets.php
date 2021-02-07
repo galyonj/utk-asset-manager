@@ -27,10 +27,21 @@ function am_display_manage_assets() {
                                 </div>
                                 <div class="form-section-body">
 									<?php
+									/**
+									 * Singular Label
+									 * Plural Label
+									 * Menu Icon
+									 * Hide From Search
+									 * Post Expiration
+									 * Public
+									 * Hierarchical
+									 * Show in Nav Menus
+									 * Description
+									 */
 									echo $ui->make_text_field( [
 										'desc'        => esc_attr__( 'Please use only alphanumeric characters and spaces', AM_TEXT ),
 										'label_text'  => esc_attr__( 'Singular Label', AM_TEXT ),
-										'maxlength'   => 32,
+										'maxlength'   => 20,
 										'name'        => 'label_singular',
 										'placeholder' => esc_attr__( '(e.g. Method)', AM_TEXT ),
 										'required'    => true,
@@ -41,11 +52,21 @@ function am_display_manage_assets() {
 									echo $ui->make_text_field( [
 										'desc'        => esc_attr__( 'Please use only alphanumeric characters and spaces', AM_TEXT ),
 										'label_text'  => esc_attr__( 'Plural Label', AM_TEXT ),
-										'maxlength'   => 32,
+										'maxlength'   => 20,
 										'name'        => 'label_plural',
 										'placeholder' => esc_attr__( '(e.g. Method)', AM_TEXT ),
 										'required'    => true,
 										'value'       => ( ! empty( $current ) ) ? $current['label_plural'] : '',
+									] );
+									?>
+									<?php
+									echo $ui->make_input_group( [
+										'desc'       => esc_attr__( 'You must select an icon for your asset type.', AM_TEXT ),
+										'label_text' => esc_attr__( 'Menu Icon', AM_TEXT ),
+										'name'       => 'menu_icon',
+										'required'   => false,
+										'btn_text'   => esc_attr__( 'Select Icon', AM_TEXT ),
+
 									] );
 									?>
 									<?php
@@ -83,7 +104,7 @@ function am_display_manage_assets() {
                                 </div>
                                 <div class="form-section-footer">
                                     <hr>
-                                    <input type="submit" class="button button-primary" value="<?php echo esc_attr__( 'Add New Asset', AM_TEXT ); ?>">
+                                    <button type="submit" class="button button-primary"><?php echo esc_attr__( 'Add New Asset', AM_TEXT ); ?></button>
                                 </div>
                             </div> <!-- form-section -->
                         </form>
@@ -93,12 +114,34 @@ function am_display_manage_assets() {
             <div class="col-sm-8">
 				<?php if ( is_dev() ) : ?>
                     <pre>
-                        <?php echo is_dev(); ?>
-                        <hr>
                         <?php $icon = 'dashicons_edit';
-                        print_r( get_svg_codes( $icon ) ); ?>
+                        echo 'result of returning a single icon:<br>';
+                        print_r( get_svg_codes( $icon ) );
+                        echo '<br><hr><br>';
+                        echo 'result of not entering an argument: ' . count( get_svg_codes() ) . ' icons returned.<br>';
+                        print_r( get_svg_codes() );
+                        ?>
                     </pre>
 				<?php endif; ?>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="iconsModal" tabindex="-1" aria-labelledby="iconsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="iconsModalLabel"><?php esc_attr_e( 'Choose an icon', AM_TEXT ); ?>></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
             </div>
         </div>
     </div>

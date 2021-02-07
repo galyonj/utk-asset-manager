@@ -59,11 +59,12 @@ function is_dev(): bool {
 
 /**
  * In the interest of making it easy for the user to choose a menu
- * icon for their new custom post type, this function loops through
- * the children of {project}/assets/svgs and returns a key=>value
+ * icon for their new custom post type, and making it easy for us
+ * to return and use their selected icon value, this function loops
+ * through the children of {project}/assets/svgs and returns a key=>value
  * array of svg names and base64-encoded svg strings
  *
- * This will do two things:
+ * This will accomplish several things:
  * 1. Populate the modal dialog fired when the user interacts with the
  *    choose_menu_icon field
  * 2. Return the name of the chosen icon to the field
@@ -82,9 +83,11 @@ function get_svg_codes( $icon = null ) {
 	$dirs     = array_diff( scandir( $base_dir ), [ '.', '..' ] );
 	$svg_arr  = [];
 	$search   = [
+		'<svg',
 		'<path',
 	];
 	$replace  = [
+		'<svg height="20" width="20"',
 		'<path fill="black"',
 	];
 
