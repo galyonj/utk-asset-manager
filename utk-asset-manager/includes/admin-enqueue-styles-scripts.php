@@ -40,7 +40,7 @@ function am_admin_enqueue() {
 		wp_enqueue_script(
 			AM_TEXT,
 			dirname( plugin_dir_url( __FILE__ ) ) . '/assets/js/' . AM_TEXT . '.min.js',
-			[ AM_TEXT . '-lib-js' ],
+			[ 'jquery' ],
 			AM_VERSION,
 			true
 		);

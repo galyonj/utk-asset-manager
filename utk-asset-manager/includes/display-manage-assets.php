@@ -9,8 +9,32 @@
  */
 
 function am_display_manage_assets() {
-	global $hook_suffix;
-	$ui = new AM_Admin_UI();
+	$base_dir = dirname( plugin_dir_path( __FILE__ ) ) . '/assets/svgs';
+	$dirs     = array_diff( scandir( $base_dir ), [ '.', '..', 'brands' ] );
+	$replace  = [
+		'<svg height="50" width="50"',
+		'<path fill="black"',
+	];
+	$search   = [
+		'<svg',
+		'<path',
+	];
+	$svg_arr  = [];
+	$ui       = new AM_Admin_UI();
+
+	foreach ( $dirs as $dir ) {
+		$files = array_diff( scandir( "{$base_dir}/{$dir}/" ), [ '.', '..' ] );
+
+		$svg_arr[ $dir ] = [];
+
+		foreach ( $files as $file ) {
+			$svg_file = pathinfo( "{$base_dir}/{$dir}/{$file}" );
+			$contents = str_replace( $search, $replace, file_get_contents( "{$base_dir}/{$dir}/{$file}" ) );
+
+			$svg_arr[ $dir ][ $svg_file['filename'] ] = $contents;
+		}
+
+	}
 	?>
     <div class="asset-manager-wrapper">
         <h1><?php echo get_admin_page_title(); ?></h1>
@@ -61,7 +85,7 @@ function am_display_manage_assets() {
 									?>
 									<?php
 									echo $ui->make_input_group( [
-										'desc'       => esc_attr__( 'You must select an icon for your asset type.', AM_TEXT ),
+										'desc'       => esc_attr__( 'You must select an icon for your asset type', AM_TEXT ),
 										'label_text' => esc_attr__( 'Menu Icon', AM_TEXT ),
 										'name'       => 'menu_icon',
 										'required'   => false,
@@ -87,7 +111,7 @@ function am_display_manage_assets() {
 
 									echo $ui->make_select_field( [
 										'classes'    => false,
-										'desc'       => esc_attr__( 'Should assets of this type ever be displayed publicly?', AM_TEXT ),
+										'desc'       => esc_attr__( 'Allow assets of this type to be displayed publicly', AM_TEXT ),
 										'label_text' => esc_attr__( 'Public', AM_TEXT ),
 										'name'       => 'public',
 										'selections' => $select,
@@ -111,7 +135,7 @@ function am_display_manage_assets() {
 
 									echo $ui->make_select_field( [
 										'classes'    => false,
-										'desc'       => esc_attr__( 'Should assets of this type ever be hidden in search results?', AM_TEXT ),
+										'desc'       => esc_attr__( 'Do not allow this asset type to appear in front-end search results', AM_TEXT ),
 										'label_text' => esc_attr__( 'Hide in Search', AM_TEXT ),
 										'name'       => 'exclude_from_search',
 										'selections' => $select,
@@ -135,7 +159,7 @@ function am_display_manage_assets() {
 
 									echo $ui->make_select_field( [
 										'classes'    => false,
-										'desc'       => esc_attr__( 'Should assets of this type automatically expire? You will be able to set an expiration period for each asset.',
+										'desc'       => esc_attr__( 'Add the ability to set an expiration period for assets of this type',
 											AM_TEXT ),
 										'label_text' => esc_attr__( 'Expiration', AM_TEXT ),
 										'name'       => 'set_expiration',
@@ -161,29 +185,46 @@ function am_display_manage_assets() {
                 </form>
             </div>
             <div class="col-sm-8">
-				<?php if ( is_dev() ) : ?>
-                    <pre>
+				<?php if ( is_dev() ) {
 
-                    </pre>
-				<?php endif; ?>
+					echo '<pre>';
+					print_r( $svg_arr['dashicons'] );
+					echo '</pre>';
+				} ?>
             </div>
         </div>
     </div>
     <div class="modal fade" id="iconsModal" tabindex="-1" aria-labelledby="iconsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="iconsModalLabel"><?php esc_attr_e( 'Choose an icon', AM_TEXT ); ?>></h5>
+                    <h3 class="modal-title" id="iconsModalLabel"><strong><?php esc_attr_e( 'Choose your menu icon', AM_TEXT ); ?></strong></h3>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-
+                    <div class="container-fluid">
+						<?php
+						if ( ! empty( $svg_arr ) && is_array( $svg_arr ) ) {
+							$keys = array_keys( $svg_arr );
+							foreach ( $keys as $key ) {
+								$key = ( 'dashicons' !== $key ) ? 'FontAwesome ' . ucwords( $key ) . ' Icons' : ucwords( $key );
+								?>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <h3><?php echo $key; ?></h3>
+                                    </div>
+                                </div>
+								<?php
+							}
+						}
+						?>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="button button-primary">Save selection</button>
+                    <button type="button" class="button button-secondary ml-2" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

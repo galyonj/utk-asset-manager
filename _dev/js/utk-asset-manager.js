@@ -3,7 +3,11 @@ const iconsBtn = document.getElementById( 'menu_icon-btn' );
 const iconsModal = document.getElementById( 'iconsModal' );
 
 ( function ( $ ) {
-	iconsBtn.addEventListener( 'click', ( e ) => {
-		$( iconsModal ).modal( 'show' );
+	$( iconsBtn ).click( function ( e ) {
+		e.preventDefault();
+		$( iconsModal ).modal( {
+			backdrop: 'static',
+			focus: true,
+		}, 'show' );
 	} );
 } )( jQuery );

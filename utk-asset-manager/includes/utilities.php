@@ -73,32 +73,35 @@ function is_dev(): bool {
  *
  * @since 0.0.1
  *
- * @param null $icon selected icon name.
+ * @param null $dir  selected icon directory
+ * @param null $icon selected icon name
  *
  * @return mixed
  */
 function get_svg_codes( $icon = null ) {
 
 	$base_dir = dirname( plugin_dir_path( __FILE__ ) ) . '/assets/svgs';
-	$dirs     = array_diff( scandir( $base_dir ), [ '.', '..' ] );
+	$dirs     = array_diff( scandir( $base_dir ), [ '.', '..', 'brands' ] );
 	$svg_arr  = [];
 	$search   = [
 		'<svg',
 		'<path',
 	];
 	$replace  = [
-		'<svg height="20" width="20"',
+		'<svg height="50" width="50"',
 		'<path fill="black"',
 	];
 
 	foreach ( $dirs as $dir ) {
 		$files = array_diff( scandir( "{$base_dir}/{$dir}/" ), [ '.', '..' ] );
 
+		$svg_arr[ $dir ] = [];
+
 		foreach ( $files as $file ) {
 			$svg_file = pathinfo( "{$base_dir}/{$dir}/{$file}" );
 			$contents = str_replace( $search, $replace, file_get_contents( "{$base_dir}/{$dir}/{$file}" ) );
 
-			$svg_arr[ $dir . '_' . $svg_file['filename'] ] = $contents;
+			$svg_arr[ $dir ][ $svg_file['filename'] ] = $contents;
 		}
 
 	}
@@ -106,7 +109,7 @@ function get_svg_codes( $icon = null ) {
 	if ( is_null( $icon ) ) {
 		return $svg_arr;
 	} else {
-		return $svg_arr[ $icon ];
+		return array_search( $icon, $svg_arr );
 	}
 
 }

@@ -5,7 +5,8 @@ var iconsBtn = document.getElementById('menu_icon-btn');
 var iconsModal = document.getElementById('iconsModal');
 
 (function ($) {
-  iconsBtn.addEventListener('click', function (e) {
+  $(iconsBtn).click(function (e) {
+    e.preventDefault();
     $(iconsModal).modal('show');
   });
 })(jQuery);
