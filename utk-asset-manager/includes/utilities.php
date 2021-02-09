@@ -43,7 +43,7 @@ function coerce_bool( $val ): bool {
  * Cheater function to make it easy to hide
  * certain blocks of debugging code in production.
  *
- * @since 0.0.1
+ * @since 0.0.2
  *
  * @return bool
  */
@@ -67,49 +67,39 @@ function is_dev(): bool {
  * This will accomplish several things:
  * 1. Populate the modal dialog fired when the user interacts with the
  *    choose_menu_icon field
- * 2. Return the name of the chosen icon to the field
+ * 2. Allow us to capture the name of the chosen icon and set it as the
+ *    value of the menu_icon field in our form.
  * 3. Given the name of the chosen icon, use the icon name to populate the
  *    menu icon in register_post_type($args).
  *
- * @since 0.0.1
+ * @since 0.0.2
  *
- * @param null $dir  selected icon directory
- * @param null $icon selected icon name
- *
- * @return mixed
+ * @return array
  */
-function get_svg_codes( $icon = null ) {
+function get_svg_codes(): array {
 
 	$base_dir = dirname( plugin_dir_path( __FILE__ ) ) . '/assets/svgs';
-	$dirs     = array_diff( scandir( $base_dir ), [ '.', '..', 'brands' ] );
+	$dirs     = array_diff( scandir( $base_dir ), [ '.', '..', 'fontawesome_brands' ] );
 	$svg_arr  = [];
-	$search   = [
-		'<svg',
-		'<path',
-	];
-	$replace  = [
-		'<svg height="50" width="50"',
-		'<path fill="black"',
-	];
 
 	foreach ( $dirs as $dir ) {
-		$files = array_diff( scandir( "{$base_dir}/{$dir}/" ), [ '.', '..' ] );
+		$files = array_diff( scandir( "{$base_dir}/{$dir}/" ), [ '.', '..', '.git', 'font-awesome-logo-full.svg' ] );
 
 		$svg_arr[ $dir ] = [];
 
 		foreach ( $files as $file ) {
-			$svg_file = pathinfo( "{$base_dir}/{$dir}/{$file}" );
-			$contents = str_replace( $search, $replace, file_get_contents( "{$base_dir}/{$dir}/{$file}" ) );
+			$file     = pathinfo( "{$base_dir}/{$dir}/{$file}" );
+			$contents = file_get_contents( "{$base_dir}/{$dir}/{$file['filename']}.{$file['extension']}" );
 
-			$svg_arr[ $dir ][ $svg_file['filename'] ] = $contents;
+			$svg_arr[ $dir ][ $file['filename'] ] = $contents;
 		}
 
 	}
 
-	if ( is_null( $icon ) ) {
-		return $svg_arr;
-	} else {
-		return array_search( $icon, $svg_arr );
-	}
-
+	/**
+	 * Finally, we return our array of SVG files
+	 *
+	 * @since 0.0.2
+	 */
+	return $svg_arr;
 }
