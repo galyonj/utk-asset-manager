@@ -377,7 +377,9 @@ textarea.form-control {
 		}
 
 		.form-section-footer {
-			padding: 8px 15px 15px;
+			border-top: $card-border-width solid $card-border-color;
+			padding:    8px 15px;
+			margin:     0;
 		}
 	}
 

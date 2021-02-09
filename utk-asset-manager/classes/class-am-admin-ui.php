@@ -26,8 +26,9 @@ class AM_Admin_UI {
 	/**
 	 * Create the opening row tag
 	 *
-	 * @since 1.0.0
-	 * @return string opening div.row.form-group
+	 * @since 0.0.2
+	 *
+	 * @return string
 	 */
 	public static function make_row(): string {
 		return '<div class="row form-group">';
@@ -49,24 +50,25 @@ class AM_Admin_UI {
 		 * so we allow `filter_var` to default to a false value
 		 * on failure, such as if it got bad data.
 		 *
-		 * @since 0.0.1
+		 * @since 0.0.3
 		 *
 		 * @uses  filter_var
 		 * @uses  FILTER_VALIDATE_BOOLEAN
 		 *
 		 * @returns bool
 		 */
-		$offset = ( filter_var( $offset, FILTER_VALIDATE_BOOLEAN ) ) ? ' offset-sm-3' : '';
+		$offset = ( filter_var( $offset, FILTER_VALIDATE_BOOLEAN ) ) ? ' offset-sm-4' : '';
 
-		return '<div class="col-sm-9' . $offset . '">';
+		return '<div class="col-sm-8' . $offset . '">';
 
 	}
 
 	/**
 	 * Create the closing row tag
 	 *
-	 * @since 1.0.0
-	 * @return string closing div.row
+	 * @since 0.0.1
+	 *
+	 * @return string
 	 */
 	public static function make_closing_divs(): string {
 		return '</div></div>';
@@ -76,7 +78,7 @@ class AM_Admin_UI {
 	 * Create the opening label tag and, depending on
 	 * the parameter values, and add a span containing a colored asterisk.
 	 *
-	 * @since 0.0.1
+	 * @since 0.0.3
 	 *
 	 * @param string $label_for  name of the field the label is associated with
 	 * @param string $label_text the text the label will display
@@ -86,7 +88,7 @@ class AM_Admin_UI {
 	 */
 	public static function make_label( $label_for = '', $label_text = '', $required = false ): string {
 
-		$classes = [ 'col-sm-3', 'col-form-label' ];
+		$classes = [ 'col-sm-4', 'col-form-label' ];
 		$text    = wp_strip_all_tags( $label_text );
 		$span    = ( $required ) ? '<span class="required">*</span>' : '';
 
@@ -97,7 +99,7 @@ class AM_Admin_UI {
 	/**
 	 * output the field description
 	 *
-	 * @since 0.0.1
+	 * @since 0.0.3
 	 *
 	 * @param string $name name of the associated field
 	 * @param string $desc the string of text to be output
@@ -111,7 +113,7 @@ class AM_Admin_UI {
 	/**
 	 * Set the default parameters for all fields.
 	 *
-	 * @since 0.1.1
+	 * @since 0.0.1
 	 *
 	 * @param array $additions array of additional settings, such a selections or checkboxes
 	 *
@@ -137,7 +139,7 @@ class AM_Admin_UI {
 	/**
 	 * Construct the attribute string for all fields
 	 *
-	 * @since 0.0.1
+	 * @since 0.0.5
 	 *
 	 * @param array $args attribute arguments
 	 *
@@ -158,7 +160,7 @@ class AM_Admin_UI {
 
 		// Build our attributes string
 		$atts = '';
-		$atts .= ( empty( $args['classes'] ) ) ? '' : 'class="form-control form-control-sm';
+		$atts .= ( empty( $args['classes'] ) ) ? '' : 'class="form-control form-control-sm" ';
 		$atts .= ( empty( $args['desc'] ) ) ? '' : 'aria-describedby="' . $args['name'] . '-description" ';
 		$atts .= ( empty( $args['name'] ) ) ? '' : 'id="' . $args['name'] . '" name="' . $args['name'] . '" ';
 		$atts .= ( empty( $args['placeholder'] ) ) ? '' : 'placeholder="' . $args['placeholder'] . '" ';
@@ -172,7 +174,7 @@ class AM_Admin_UI {
 	/**
 	 * Create the text input
 	 *
-	 * @since 1.0.0
+	 * @since 0.0.1
 	 *
 	 * @param array $args
 	 *
@@ -221,7 +223,7 @@ class AM_Admin_UI {
 				$is_selected = '';
 
 				if ( is_numeric( $selected ) ) {
-					$selected = coerce_bool( $selected );
+					$selected = am_coerce_bool( $selected );
 				}
 
 				if ( ! empty( $selected ) && is_bool( $selected ) ) {
@@ -250,6 +252,15 @@ class AM_Admin_UI {
 
 	}
 
+	/**
+	 * Create checkbox fields
+	 *
+	 * @since 0.0.4
+	 *
+	 * @param array $args
+	 *
+	 * @return string
+	 */
 	public function make_checkboxes( $args = [] ): string {
 		$defaults = self::set_default_parameters( $args );
 		$args     = wp_parse_args( $args, $defaults );
@@ -283,7 +294,7 @@ class AM_Admin_UI {
 	/**
 	 * Create and output a textarea field
 	 *
-	 * @since 1.0.0
+	 * @since 0.0.1
 	 *
 	 * @param array $args
 	 *
@@ -310,7 +321,7 @@ class AM_Admin_UI {
 	/**
 	 * Output an input group combo with a textarea and a button
 	 *
-	 * @since 0.0.1
+	 * @since 0.0.5
 	 *
 	 * @param array $args
 	 *
@@ -328,7 +339,7 @@ class AM_Admin_UI {
 		$field .= self::make_label( $args['name'], $args['label_text'], $args['required'] );
 		$field .= self::make_col( $args['offset'] );
 		$field .= '<div class="input-group">';
-		$field .= '<input type="text" class="form-control form-control-sm" id="' . $args['name'] . '" name="' . $args['name'] . '" aria-label="' . $args['label_text'] . '" aria-describedby="' . $args['name'] . '-btn">';
+		$field .= "<input type='text' class='form-control form-control-sm' id='{$args['name']}' name='{$args['name']}' aria-label='{$args['label_text']}' aria-describedby='{$args['name']}-btn'>";
 		$field .= '<div class="input-group-addon">';
 		$field .= '<button type="button" class="button button-primary input-group-button" id="' . $args['name'] . '-btn">' . $args['btn_text'] . '</button>';
 		$field .= self::make_closing_divs();

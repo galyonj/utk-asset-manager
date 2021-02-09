@@ -20,6 +20,12 @@ function am_admin_enqueue() {
 		'asset-manager_page_manage_taxonomies'
 	];
 
+	/**
+	 * Don't load anything unless the
+	 * current page is one of our pages.
+	 *
+	 * @since 0.0.5
+	 */
 	if ( is_admin() && in_array( $hook_suffix, $allowed_slugs ) ) {
 
 		wp_enqueue_style(

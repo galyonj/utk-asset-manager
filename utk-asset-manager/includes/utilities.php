@@ -35,7 +35,7 @@ function am_get_menu_icon() {
  *
  * @return bool result of filter_var on $val
  */
-function coerce_bool( $val ): bool {
+function am_coerce_bool( $val ): bool {
 	return filter_var( $val, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE );
 }
 
@@ -47,7 +47,7 @@ function coerce_bool( $val ): bool {
  *
  * @return bool
  */
-function is_dev(): bool {
+function am_is_dev(): bool {
 	$host = $_SERVER['HTTP_HOST'];
 
 	if ( 'localhost:8080' !== $host ) {
@@ -55,6 +55,43 @@ function is_dev(): bool {
 	}
 
 	return true;
+}
+
+/**
+ * This function looks for a short-lived transient that will be created
+ * during the CRUD process for our custom post types and transients.
+ * If that transient is found, we do a soft flush of the rewrite rules
+ * upon activation of any of the CRUD operations performed by our plugin.
+ *
+ * Flushing the rewrite rules is really memory-intensive and isn't something
+ * one should aspire to do any more often than they absolutely have to,
+ * but, as the creation of custom post types and custom taxonomies almost always
+ * involves creating new rewrite rules...we have to.
+ *
+ * @since 0.0.1
+ *
+ * @link  https://developer.wordpress.org/reference/functions/flush_rewrite_rules/
+ * @link  https://developer.wordpress.org/reference/functions/get_transient/
+ */
+function am_flush_rewrite_rules() {
+
+	if ( wp_doing_ajax() || ! is_admin() ) {
+		return;
+	}
+
+	/**
+	 * Check that our transient exists and has not
+	 * expired. If so, we flush rewrite rules for the site
+	 * before deleting the transient.
+	 *
+	 * @since 0.0.1
+	 */
+	if ( true === ( $value = get_transient( 'am_flush_rewrite_rules' ) ) ) {
+
+		flush_rewrite_rules( false );
+
+		delete_transient( 'am_flush_rewrite_rules' );
+	}
 }
 
 /**
@@ -76,7 +113,7 @@ function is_dev(): bool {
  *
  * @return array
  */
-function get_svg_codes(): array {
+function am_get_svg_codes(): array {
 
 	$base_dir = dirname( plugin_dir_path( __FILE__ ) ) . '/assets/svgs';
 	$dirs     = array_diff( scandir( $base_dir ), [ '.', '..', 'fontawesome_brands' ] );

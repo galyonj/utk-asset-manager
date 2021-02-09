@@ -9,6 +9,8 @@
  */
 
 function am_display_manage_taxonomies() {
+	$status = 'new';
+	$ui     = new AM_Admin_UI();
 	?>
     <div class="asset-manager-wrapper">
         <h1><?php echo get_admin_page_title(); ?></h1>
@@ -16,8 +18,9 @@ function am_display_manage_taxonomies() {
         <div class="row">
             <div class="col-12 col-lg-4">
                 <form method="post" action="<?php esc_url( admin_url( 'admin-post.php' ) ); ?>" id="utk-am-form">
-					<?php wp_nonce_field( 'am_process_assets' ); ?>
-                    <!--                    <input type="hidden" name="action" value="am_process_assets">-->
+					<?php wp_nonce_field( 'am_process_taxes' ); ?>
+                    <input type="hidden" name="action" value="am_process_assets">
+                    <input type="hidden" name="am_tax_status" id="am_tax_status" value="<?php echo $status; ?>">
                     <div class="form-section">
                         <div class="form-section-header">
                             <span><?php echo esc_html( 'Add New Asset' ); ?></span>
@@ -27,12 +30,9 @@ function am_display_manage_taxonomies() {
 							/**
 							 * Singular Label
 							 * Plural Label
-							 * Menu Icon
 							 * Public
-							 * Post Expiration
-							 * Hide From Search
 							 * Hierarchical
-							 * Show in Nav Menus
+							 * Show Admin Column
 							 * Description
 							 */
 							echo $ui->make_text_field( [
@@ -80,7 +80,7 @@ function am_display_manage_taxonomies() {
 								]
 							];
 
-							$selected           = isset( $current ) ? coerce_bool( $current['public'] ) : '';
+							$selected           = isset( $current ) ? am_coerce_bool( $current['public'] ) : '';
 							$select['selected'] = ( ! empty( $selected ) ) ? $current['public'] : '';
 
 							echo $ui->make_select_field( [
@@ -104,7 +104,7 @@ function am_display_manage_taxonomies() {
 								]
 							];
 
-							$selected           = isset( $current ) ? coerce_bool( $current['set_expiration'] ) : '';
+							$selected           = isset( $current ) ? am_coerce_bool( $current['set_expiration'] ) : '';
 							$select['selected'] = ( ! empty( $selected ) ) ? $current['set_expiration'] : '';
 
 							echo $ui->make_select_field( [
@@ -129,7 +129,7 @@ function am_display_manage_taxonomies() {
 								]
 							];
 
-							$selected           = isset( $current ) ? coerce_bool( $current['hierarchical'] ) : '';
+							$selected           = isset( $current ) ? am_coerce_bool( $current['hierarchical'] ) : '';
 							$select['selected'] = ( ! empty( $selected ) ) ? $current['hierarchical'] : '';
 
 							echo $ui->make_select_field( [
@@ -153,7 +153,7 @@ function am_display_manage_taxonomies() {
 								]
 							];
 
-							$selected           = isset( $current ) ? coerce_bool( $current['exclude_from_search'] ) : '';
+							$selected           = isset( $current ) ? am_coerce_bool( $current['exclude_from_search'] ) : '';
 							$select['selected'] = ( ! empty( $selected ) ) ? $current['exclude_from_search'] : '';
 
 							echo $ui->make_select_field( [
@@ -166,10 +166,12 @@ function am_display_manage_taxonomies() {
 							?>
 							<?php
 							echo $ui->make_textarea_field( [
-								'desc'       => esc_attr__( '(Optional) Enter a short description of your asset type', AM_TEXT ),
-								'label_text' => esc_attr__( 'Description', AM_TEXT ),
-								'name'       => 'description',
-								'rows'       => '4'
+								'desc'        => esc_attr__( 'This may or may not appear on the front-end depending on theme settings.',
+									AM_TEXT ),
+								'label_text'  => esc_attr__( 'Description', AM_TEXT ),
+								'name'        => 'description',
+								'placeholder' => esc_attr__( 'Enter a short description of your taxonomy', AM_TEXT ),
+								'rows'        => '4'
 							] );
 							?>
                         </div>
@@ -181,11 +183,14 @@ function am_display_manage_taxonomies() {
                 </form>
             </div>
             <div class="col-12 col-lg-8">
-				<?php if ( is_dev() ) : ?>
+				<?php if ( am_is_dev() ) : ?>
                     <pre>
                     <?php print_r( $_POST ); ?>
                     </pre>
 				<?php endif; ?>
+                <table class="table table-striped table-bordered" id="utk-am-table">
+
+                </table>
             </div>
         </div>
     </div>

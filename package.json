@@ -1,7 +1,7 @@
 {
   "name": "utk-asset-manager",
   "description": "Simplified digital asset management with custom post types and taxonomies.",
-  "version": "0.0.1",
+  "version": "0.5.1",
   "repository": "galyonj/utk-asset-management",
   "author": "John Galyon <galyon.jb@gmail.com>",
   "license": "GPL-2.0-only",
@@ -51,7 +51,7 @@
     "translate": "gulp translate",
     "styles-rtl": "gulp stylesRTL",
     "cache-clear": "gulp clearCache",
-    "build": "rm -rf ./plugins/utk-asset-manager && cp -r ./utk-asset-manager/ ./plugins/",
+    "build": "time rsync -av utk-asset-manager/* plugins/utk-asset-manager",
     "commit": "git-cz"
   },
   "config": {

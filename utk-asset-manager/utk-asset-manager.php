@@ -87,7 +87,8 @@ function am_create_plugin_menu() {
 		$caps,
 		$parent_slug,
 		'am_display_settings',
-		am_get_menu_icon()
+		am_get_menu_icon(),
+		2
 	);
 
 	add_submenu_page(
