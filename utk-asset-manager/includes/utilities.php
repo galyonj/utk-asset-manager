@@ -70,7 +70,7 @@ function is_dev(): bool {
  * 2. Allow us to capture the name of the chosen icon and set it as the
  *    value of the menu_icon field in our form.
  * 3. Given the name of the chosen icon, use the icon name to populate the
- *    menu icon in register_post_type($args).
+ *    menu icon in register_post_type($args['menu_icon']).
  *
  * @since 0.0.2
  *
