@@ -269,6 +269,7 @@
 				border-radius: $card-border-radius;
 
 				svg {
+					cursor:     pointer;
 					height:     30px;
 					width:      30px;
 					fill:       rgba(0, 0, 0, 0.65);
@@ -300,8 +301,14 @@
 			.col {
 				text-align: right;
 
-				.selection {
+				.selected-icon {
+					display: inline;
 
+					svg {
+						width:  30px;
+						height: 30px;
+						fill:   rgba(0, 0, 0, 0.65);
+					}
 				}
 			}
 		}

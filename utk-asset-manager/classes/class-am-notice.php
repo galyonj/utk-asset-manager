@@ -1,20 +1,25 @@
 <?php
-
-namespace Asset_Manager;
-
 /**
- * Class Notifications
- * Create and output notifications for WordPress
- * given the following parameters
- * id
- * type
- * heading
- * body
+ * Class Notifications -- Create and output notifications for WordPress
+ * Use example:
  *
+ * // Instantiate the class
+ * $notice = new Asset_Manager\Notification();
+ *
+ * // Call the class
+ * echo $notice->the_notice(
+ *     'success', // Notice type (can be any of error, info, success, warning)
+ *     __('Notification message text', AM_TEXT), //The notification text
+ * );
+ *
+ * @since   0.5.0
  *
  * @package Asset_Manager
  */
-class Notification {
+
+namespace Asset_Manager;
+
+class Admin_Notice {
 
 	/**
 	 * @var string $type Message type
@@ -54,7 +59,7 @@ class Notification {
 	];
 
 	/**
-	 * Notifications constructor.
+	 * Notification constructor.
 	 *
 	 * @param string $type Notification type
 	 * @param string $body Notification body
@@ -82,7 +87,9 @@ class Notification {
 		$this->allowed_html = apply_filters( 'am_admin_notices_allowed_html', $this->allowed_html );
 
 		/**
-		 * Hook into the admin_notices function
+		 * Hook into the admin_notices function and display the notice.
+		 *
+		 * @since 0.5.0
 		 */
 		add_action( 'admin_notices', [ $this, 'the_notice' ] );
 	}
@@ -144,28 +151,25 @@ class Notification {
 	/**
 	 * Build the notification
 	 *
-	 * @param string $type  notification type
-	 * @param string $body  notification body
+	 * @param string $type notification type
+	 * @param string $body notification body
 	 *
 	 * @since  0.5.0
-	 *
-	 * @return string
 	 */
-	public function the_notice( string $type, string $body ): string {
+	public function the_notice( string $type, string $body ) {
 
 		$allowed_html = $this->allowed_html;
 		$classes      = esc_attr( $this->the_classes( $type ) );
-		$message      = $this->the_body( $body );
+		$body         = $this->the_body( $body );
 
-		return sprintf(
+		printf(
 			wp_kses(
 				'<div class="%1$s">%2$s</div>',
 				$allowed_html
 			),
 			$classes,
-			$message
+			$body
 		);
-
 	}
 
 }

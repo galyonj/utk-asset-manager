@@ -1,6 +1,7 @@
 {
-	"name": "galyonj/shrike",
+	"name": "galyonj/utk-asset-manager",
 	"type": "wordpress-plugin",
+	"description": "",
 	"authors": [
 		{
 			"name": "John Galyon",
@@ -34,6 +35,8 @@
 		"wpackagist-plugin/debug-bar-constants": "^2.0",
 		"wpackagist-plugin/debug-bar-actions-and-filters-addon": "^1.5",
 		"wpackagist-plugin/debug-bar-list-dependencies": "^1.1",
-		"wpackagist-plugin/elementor": "^3.1"
+		"wpackagist-plugin/elementor": "^3.1",
+		"wpackagist-plugin/the-events-calendar": "^5.3.2.1",
+		"wpackagist-plugin/post-expirator": "^2.4"
 	}
 }

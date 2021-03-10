@@ -104,7 +104,7 @@ function am_prepare_tax_data() {
 
 	do_action( 'am_post_register_taxes', $taxes );
 }
-//add_action( 'init', 'am_prepare_tax_array', 9 );
+add_action( 'init', 'am_prepare_tax_data', 9 );
 
 function am_register_single_post_type( $cpt = [] ) {
 
@@ -189,7 +189,7 @@ function am_register_single_post_type( $cpt = [] ) {
 			'<path fill="black"',
 		];
 
-		if ( false !== strpos( $menu_icon, 'dashicons' ) ) {
+		if ( false === strpos( $menu_icon, 'dashicons' ) ) {
 			$menu_icon = 'data:image/svg+xml;base64,' . base64_encode( str_replace( $search, $destroy, $svg[ $ex[0] ][ $ex[1] ] ) );
 		} else {
 			$menu_icon = $cpt['menu_icon'];
@@ -228,12 +228,26 @@ function am_register_single_tax( $tax = [] ) {
 
 	$label          = $tax['label'];
 	$singular_label = $tax['singular_label'];
-	$name           = $tax['name'];
-	$object_types   = ( ! empty( $tax['object_types'] ) && is_array( $tax['object_types'] ) ) ? $tax['object_types'] : [];
+
+	/**
+	 * Nicole wants any custom taxonomy created
+	 * by this plugin to automatically be assigned
+	 * to every post type. That is ill-advised, but
+	 * I can't get a word in edgewise to explain why,
+	 * so we'll just hope for the best that it
+	 * doesn't screw anything up.
+	 *
+	 * @since 0.5.0
+	 */
+	$built_in_post_types = [
+		'page',
+		'post',
+	];
+	$allowed_post_types  = array_merge( array_keys( am_get_registered_post_types() ), $built_in_post_types );
 
 	$labels = [
-		'name'                       => sprintf( _x( 'Post %s', 'taxonomy general name', AM_TEXT ), $label ),
-		'singular_name'              => sprintf( _x( 'Post %s', 'taxonomy singular name', AM_TEXT ), $singular_label ),
+		'name'                       => sprintf( _x( '%s', 'taxonomy general name', AM_TEXT ), $label ),
+		'singular_name'              => sprintf( _x( '%s', 'taxonomy singular name', AM_TEXT ), $singular_label ),
 		'menu_name'                  => $label,
 		'all_items'                  => sprintf( __( 'All %s', AM_TEXT ), $label ),
 		'edit_item'                  => sprintf( __( 'Edit %s', AM_TEXT ), $singular_label ),
@@ -251,22 +265,28 @@ function am_register_single_tax( $tax = [] ) {
 		'not_found'                  => sprintf( __( 'No %s found.', AM_TEXT ), strtolower( $label ) ),
 		'back_to_items'              => sprintf( __( '← Back to %s', AM_TEXT ), strtolower( $label ) ),
 	];
-
-	$args = array(
-		'name'               => $name,
-		'capability_type'    => ( ! empty( $tax['capability_type'] ) ) ? $tax['capability_type'] : 'post',
-		'description'        => ( ! empty( $tax['description'] ) ) ? $tax['description'] : '',
-		'hierarchical'       => ( ! empty( $tax['hierarchical'] ) ) ? $tax['hierarchical'] : false,
+	$args   = array(
 		'labels'             => $labels,
-		'menu_position'      => ( ! empty( $tax['menu_position'] ) ) ? $tax['menu_position'] : 2,
+		'description'        => ( ! empty( $tax['description'] ) ) ? $tax['description'] : '',
 		'public'             => ( ! empty( $tax['public'] ) ) ? $tax['public'] : true,
 		'publicly_queryable' => ( ! empty( $tax['publicly_queryable'] ) ) ? $tax['publicly_queryable'] : true,
-		'show_admin_column'  => ( ! empty( $tax['show_admin_column'] ) ) ? $tax['show_admin_column'] : true,
-		'show_in_admin_bar'  => ( ! empty( $tax['show_in_admin_bar'] ) ) ? $tax['show_in_admin_bar'] : false,
-		'show_in_rest'       => ( ! empty( $tax['show_in_rest'] ) ) ? $tax['show_in_rest'] : true,
+		'hierarchical'       => ( ! empty( $tax['hierarchical'] ) ) ? $tax['hierarchical'] : false,
+		'show_ui'            => ( ! empty( $tax['show_ui'] ) ) ? $tax['show_ui'] : true,
 		'show_in_menu'       => ( ! empty( $tax['show_in_menu'] ) ) ? $tax['show_in_menu'] : false,
 		'show_in_nav_menus'  => ( ! empty( $tax['show_in_nav_menus'] ) ) ? $tax['show_in_nav_menus'] : false,
+		'show_in_rest'       => ( ! empty( $tax['show_in_rest'] ) ) ? $tax['show_in_rest'] : true,
+		'show_tagcloud'      => ( ! empty( $tax['show_tagcloud'] ) ) ? $tax['show_tagcloud'] : true,
+		'show_in_quick_edit' => ( ! empty( $tax['show_in_quick_edit'] ) ) ? $tax['show_in_quick_edit'] : true,
+		'show_admin_column'  => ( ! empty( $tax['show_admin_column'] ) ) ? $tax['show_admin_column'] : true,
+		'rewrite'            => [
+			'slug'         => $tax['name'],
+			'with_front'   => ( ! empty( $tax['rewrite']['with_front'] ) ) ? $tax['rewrite']['with_front'] : true,
+			'hierarchical' => ( ! empty( $tax['rewrite']['hierarchical'] ) ) ? $tax['rewrite']['hierarchical'] : false,
+		],
+		'query_var'          => ( ! empty( $tax['query_var'] ) ) ? $tax['query_var'] : $tax['name'],
 	);
 
-	return register_taxonomy( $tax['name'], $object_types, $args );
+	$args = apply_filters( 'am_pre_register_tax', $args, $tax['name'], $tax );
+
+	return register_taxonomy( $tax['name'], $allowed_post_types, $args );
 }

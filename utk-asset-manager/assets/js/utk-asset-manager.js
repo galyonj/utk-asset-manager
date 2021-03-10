@@ -1,9 +1,12 @@
 "use strict";
 
-// This is just here to make sure that I'm putting the directory into the right place.
 var iconsBtn = document.getElementById('menu_icon-btn');
 var iconsModal = document.getElementById('iconsModal');
 var icons = document.querySelectorAll('.icons-list li svg');
+var label = document.getElementById('label');
+var singularLabel = document.getElementById('singular_label');
+var itemName = document.getElementById('name');
+var updateContent = document.querySelector('.update-posts-terms');
 
 (function ($) {
   $(iconsBtn).click(function (e) {
@@ -24,13 +27,42 @@ var icons = document.querySelectorAll('.icons-list li svg');
 
     this.parentNode.classList.add('selected'); // Display the selected SVG file in the modal footer for confirmation
 
-    $('.selected-icon').show().empty();
-    this.clone().appendTo($('.selected-icon span'));
+    $('.selected-icon').show().find('span').empty();
+    $('.selected > svg').clone().appendTo($('.selected-icon span'));
   });
-  $('#icon-select-btn').click(function () {
+  $('#icon-select-btn').click(function (e) {
     var selectedIcon = $('.selected').attr('id').replace('[', '-').replace(']', '');
     $('#menu_icon').val(selectedIcon).focus();
     console.log($('.selected').attr('id') + ' was selected');
     $(iconsModal).modal('hide');
   });
-})(jQuery);
+})(jQuery); // TODO: Detect whether a cpt or taxonomy
+//  has already been registered during form
+//  creation instead of waiting for the $_POST?
+
+/**
+ * On change to the singular label field,
+ * populate the name field with a formatted
+ * version of the value from the singular
+ * label field.
+ *
+ * @since 0.5.0
+ */
+
+
+singularLabel.addEventListener('change', function (e) {
+  var regex = '/[\'"]/ig';
+  document.getElementById('name').value = e.target.value.toLowerCase().replaceAll(regex, '').split(' ').join('_');
+});
+/**
+ * We only want to display the checkbox for updating the
+ */
+
+itemName.addEventListener('change', function (e) {
+  var qs = window.location.search;
+  var params = new URLSearchParams(qs);
+
+  if (params.has('name') && e.target.value !== params.get('name')) {
+    updateContent.css('display', 'block');
+  }
+});

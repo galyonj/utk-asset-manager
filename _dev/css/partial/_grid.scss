@@ -75,4 +75,37 @@
 // asset manager page wrap
 .asset-manager-wrapper {
 	margin: 19px 20px 0 2px;
+
+	.section-wrapper {
+		background-color: $white;
+		border:           1px solid $card-border-color;
+		display:          flex;
+		flex-direction:   column;
+		width:            100%;
+
+		.section-header {
+			border-bottom: $card-border-width solid $card-border-color;
+			padding:       8px 15px;
+
+			h3 {
+				@include font_size($font-size-lg);
+				font-weight:   $font-weight-bold;
+				margin-bottom: 0;
+			}
+		}
+
+		.section-body {
+			padding: 15px 15px 0;
+
+			&.asset-manager-table-wrapper {
+				padding: 0;
+			}
+		}
+
+		.section-footer {
+			border-top: $card-border-width solid $card-border-color;
+			padding:    8px 15px;
+			margin:     0;
+		}
+	}
 }

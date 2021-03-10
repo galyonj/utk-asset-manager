@@ -3,11 +3,13 @@
  * Methods to repeatably construct admin form elements
  *
  * @since      1.0.0
- * @subpackage Admin_UI
  * @author     John Galyon
+ * @subpackage Admin_UI
  * @package    COE_AM
  * @license    GPL-2.0+
  */
+
+namespace Asset_Manager;
 
 /**
  *  <div class="row form-group">
@@ -21,25 +23,29 @@
  *      </div>
  *  </div>
  */
-class AM_Admin_UI {
+class Admin_UI {
 
 	/**
 	 * Create the opening row tag
+	 *
+	 * @param bool $visible should the row be hidden?
 	 *
 	 * @since 0.0.2
 	 *
 	 * @return string
 	 */
-	public static function make_row(): string {
-		return '<div class="row form-group">';
+	public static function make_row( $visible = true ): string {
+		$visible = ( false === $visible ) ? 'sr-only' : '';
+
+		return "<div class='row form-group {$visible}'>";
 	}
 
 	/**
 	 * Output the opening column div for the form element
 	 *
-	 * @since 0.0.1
-	 *
 	 * @param false $offset
+	 *
+	 * @since 0.0.1
 	 *
 	 * @return string
 	 */
@@ -57,9 +63,9 @@ class AM_Admin_UI {
 		 *
 		 * @returns bool
 		 */
-		$offset = ( filter_var( $offset, FILTER_VALIDATE_BOOLEAN ) ) ? ' offset-sm-4' : '';
+		$offset = ( filter_var( $offset, FILTER_VALIDATE_BOOLEAN ) ) ? ' offset-sm-3' : '';
 
-		return '<div class="col-sm-8' . $offset . '">';
+		return '<div class="col-sm-9' . $offset . '">';
 
 	}
 
@@ -78,31 +84,31 @@ class AM_Admin_UI {
 	 * Create the opening label tag and, depending on
 	 * the parameter values, and add a span containing a colored asterisk.
 	 *
-	 * @since 0.0.3
-	 *
 	 * @param string $label_for  name of the field the label is associated with
 	 * @param string $label_text the text the label will display
 	 * @param false  $required   whether the associated field is required
+	 *
+	 * @since 0.0.3
 	 *
 	 * @return string html label element
 	 */
 	public static function make_label( $label_for = '', $label_text = '', $required = false ): string {
 
-		$classes = [ 'col-sm-4', 'col-form-label' ];
+		$classes = [ 'col-sm-3', 'col-form-label' ];
 		$text    = wp_strip_all_tags( $label_text );
 		$span    = ( $required ) ? '<span class="required">*</span>' : '';
 
-		return sprintf( '<label for="%s" class="%s">%s %s</label>', $label_for, implode( ' ', $classes ), $text, $span );
+		return sprintf( '<label for="%s" class="%s">%s%s</label>', $label_for, implode( ' ', $classes ), $text, $span );
 
 	}
 
 	/**
 	 * output the field description
 	 *
-	 * @since 0.0.3
-	 *
 	 * @param string $name name of the associated field
 	 * @param string $desc the string of text to be output
+	 *
+	 * @since 0.0.3
 	 *
 	 * @return string html span element
 	 */
@@ -113,9 +119,9 @@ class AM_Admin_UI {
 	/**
 	 * Set the default parameters for all fields.
 	 *
-	 * @since 0.0.1
-	 *
 	 * @param array $additions array of additional settings, such a selections or checkboxes
+	 *
+	 * @since 0.0.1
 	 *
 	 * @return array
 	 */
@@ -129,7 +135,6 @@ class AM_Admin_UI {
 			'offset'      => false,
 			'placeholder' => '',
 			'required'    => false,
-			'rows'        => 3,
 			'selections'  => [],
 			'value'       => '',
 			'visible'     => true,
@@ -139,9 +144,9 @@ class AM_Admin_UI {
 	/**
 	 * Construct the attribute string for all fields
 	 *
-	 * @since 0.0.5
-	 *
 	 * @param array $args attribute arguments
+	 *
+	 * @since 0.0.5
 	 *
 	 * @return string
 	 */
@@ -174,9 +179,9 @@ class AM_Admin_UI {
 	/**
 	 * Create the text input
 	 *
-	 * @since 0.0.1
-	 *
 	 * @param array $args
+	 *
+	 * @since 0.0.1
 	 *
 	 * @return string input element
 	 */
@@ -186,7 +191,7 @@ class AM_Admin_UI {
 		$args     = wp_parse_args( $args, $defaults );
 
 		$field = '';
-		$field .= self::make_row();
+		$field .= self::make_row( $args['visible'] );
 		$field .= self::make_label( $args['name'], $args['label_text'], $args['required'] );
 		$field .= self::make_col( $args['offset'] );
 		$field .= "<input type='text' {$atts}>";
@@ -200,9 +205,9 @@ class AM_Admin_UI {
 	/**
 	 * Create the select field
 	 *
-	 * @since 0.0.1
-	 *
 	 * @param array $args supplied arguments array
+	 *
+	 * @since 0.0.1
 	 *
 	 * @return string select element
 	 */
@@ -255,21 +260,23 @@ class AM_Admin_UI {
 	/**
 	 * Create checkbox fields
 	 *
-	 * @since 0.0.4
-	 *
 	 * @param array $args
+	 *
+	 * @since 0.0.4
 	 *
 	 * @return string
 	 */
 	public function make_checkboxes( $args = [] ): string {
-		$defaults = self::set_default_parameters( $args );
+		$defaults = self::set_default_parameters();
 		$args     = wp_parse_args( $args, $defaults );
 
 		$field = '';
 		$field .= self::make_row();
 		//$field .= self::make_label( $args['name'], $args['label_text'], $args['required'] );
 
-		$field .= "<span class='col-sm-3 checkbox-span'>{$args['label_text']}</span>";
+		$field .= "<div class='col-sm-3 checkbox-span'>{$args['label_text']}";
+		$field .= "<div class='checkbox-description form-text text-muted'>{$args['description']}</div>";
+		$field .= '</div>';
 
 		$field .= self::make_col( $args['offset'] );
 
@@ -277,9 +284,12 @@ class AM_Admin_UI {
 
 			foreach ( $args['checkboxes']['boxes'] as $box ) {
 
-				$field .= '<div class="form-check">';
-				$field .= "<input type='checkbox' class='form-check-input' id='{$args['name']}'>";
-				$field .= "<label for='{$args['name']}' class='mt-1 ml-2'>{$box['label']}</label>";
+				$is_checked = ( ! empty( $box['checked'] ) ) ? 'checked="checked"' : '';
+
+				$field .= '<div class="form-check mb-1">';
+				$field .= "<input type='checkbox' id='{$args['name']}[{$box['value']}]' class='form-check-input' name='{$args['name']}[]' value='{$box['value']}' {$is_checked}>";
+				//$field .= "<label for='{$args['name']}[{$box['value']}]' class='form-check-label ml-1'>{$box['label']}</label>";
+				$field .= "<label for='{$args['name']}[{$box['value']}]' class='form-check-label ml-1'>{$box['label']}</label>";
 				$field .= '</div>';
 
 			}
@@ -294,15 +304,17 @@ class AM_Admin_UI {
 	/**
 	 * Create and output a textarea field
 	 *
-	 * @since 0.0.1
-	 *
 	 * @param array $args
+	 *
+	 * @since 0.0.1
 	 *
 	 * @return string textarea field
 	 */
-	public function make_textarea_field( $args = array() ) {
+	public function make_textarea_field( $args = array() ): string {
 
-		$defaults = self::set_default_parameters();
+		$defaults = self::set_default_parameters( [
+			'rows' => 3,
+		] );
 		$atts     = self::make_attributes( $args );
 		$args     = wp_parse_args( $args, $defaults );
 
@@ -310,7 +322,7 @@ class AM_Admin_UI {
 		$field .= self::make_row();
 		$field .= self::make_label( $args['name'], $args['label_text'], $args['required'] );
 		$field .= self::make_col( $args['offset'] );
-		$field .= "<textarea {$atts}></textarea>";
+		$field .= "<textarea {$atts}>{$args['value']}</textarea>";
 		$field .= self::make_description( $args['name'], $args['desc'] );
 		$field .= self::make_closing_divs();
 
@@ -321,9 +333,9 @@ class AM_Admin_UI {
 	/**
 	 * Output an input group combo with a textarea and a button
 	 *
-	 * @since 0.0.5
-	 *
 	 * @param array $args
+	 *
+	 * @since 0.0.5
 	 *
 	 * @return string
 	 */
@@ -339,9 +351,10 @@ class AM_Admin_UI {
 		$field .= self::make_label( $args['name'], $args['label_text'], $args['required'] );
 		$field .= self::make_col( $args['offset'] );
 		$field .= '<div class="input-group">';
-		$field .= "<input type='text' class='form-control form-control-sm' id='{$args['name']}' name='{$args['name']}' aria-label='{$args['label_text']}' aria-describedby='{$args['name']}-btn'>";
+		$field .= "<input type='text' class='form-control form-control-sm' id='{$args['name']}' name='{$args['name']}' value='{$args['value']}' aria-label='{$args['label_text']}' 
+		aria-describedby='{$args['name']}-btn'>";
 		$field .= '<div class="input-group-addon">';
-		$field .= '<button type="button" class="button button-primary input-group-button" id="' . $args['name'] . '-btn">' . $args['btn_text'] . '</button>';
+		$field .= '<button type="button" class="button button-primary input-group-append" id="' . $args['name'] . '-btn">' . $args['btn_text'] . '</button>';
 		$field .= self::make_closing_divs();
 		$field .= self::make_description( $args['name'], $args['desc'] );
 		$field .= self::make_closing_divs();

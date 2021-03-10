@@ -14,11 +14,15 @@ if ( ! defined( 'WPINC' ) ) {
 function am_admin_enqueue() {
 	global $hook_suffix;
 
+	/**
+	 * These are the pages on our
+	 */
 	$allowed_slugs = [
 		'asset-manager_page_about_asset_manager',
-		'asset-manager_page_manage_assets',
-		'asset-manager_page_manage_taxonomies'
+		'asset-manager_page_manage_post_types',
+		'asset-manager_page_manage_metadata'
 	];
+
 
 	/**
 	 * Don't load anything unless the
@@ -38,7 +42,7 @@ function am_admin_enqueue() {
 		wp_enqueue_script(
 			AM_TEXT . '-lib',
 			dirname( plugin_dir_url( __FILE__ ) ) . '/assets/js/' . AM_TEXT . '-lib.min.js',
-			[ 'jquery' ],
+			[ 'jquery-core' ],
 			'',
 			true
 		);
@@ -46,7 +50,7 @@ function am_admin_enqueue() {
 		wp_enqueue_script(
 			AM_TEXT,
 			dirname( plugin_dir_url( __FILE__ ) ) . '/assets/js/' . AM_TEXT . '.min.js',
-			[ 'jquery' ],
+			[ 'jquery-core', AM_TEXT . '-lib' ],
 			AM_VERSION,
 			true
 		);

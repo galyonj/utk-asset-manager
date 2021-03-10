@@ -354,45 +354,27 @@ textarea.form-control {
 }
 
 // Project-specific form styling
-#utk-am-form {
-	.form-section {
-		background-color: $white;
-		border:           1px solid $card-border-color;
-		display:          flex;
-		flex-direction:   column;
-		width:            100%;
-
-		.form-section-header {
-			padding:       8px 15px;
-			border-bottom: $card-border-width solid $card-border-color;
-
-			span {
-				@include font_size($font-size-lg);
-				font-weight: $font-weight-bold;
-			}
-		}
-
-		.form-section-body {
-			padding: 15px 15px 0;
-		}
-
-		.form-section-footer {
-			border-top: $card-border-width solid $card-border-color;
-			padding:    8px 15px;
-			margin:     0;
-		}
-	}
+#asset-manager-form {
+	margin-top: 2rem;
 
 	select {
 		border: $input-border-width solid $input-border-color !important;
 	}
 
-	.input-group-button {
-		border-radius: 0 $border-radius $border-radius 0 !important;
+	.input-group-append {
+		border-top-left-radius:    0;
+		border-bottom-left-radius: 0;
 	}
 
-	.checkbox-span {
+	.checkbox-span,
+	.radio-span {
 		@extend label;
 		@extend .col-form-label;
+
+		div {
+			font-weight: $font-weight-normal;
+			@extend .form-text;
+			@extend .text-muted;
+		}
 	}
 }
